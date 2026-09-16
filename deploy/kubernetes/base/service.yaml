@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpu-usage-calculator
+  namespace: gpu-sizing
+  labels:
+    app.kubernetes.io/name: gpu-usage-calculator
+spec:
+  selector:
+    app.kubernetes.io/name: gpu-usage-calculator
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

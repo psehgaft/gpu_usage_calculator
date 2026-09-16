@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPU Usage Calculator</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
+    body { margin: 0; background: #151021; color: #f7f4ff; }
+    main { max-width: 1100px; margin: auto; padding: 3rem 1.5rem; }
+    h1 { font-size: clamp(2rem, 6vw, 4.5rem); margin: 0; }
+    p { color: #cbc3de; line-height: 1.5; }
+    .accent { color: #a991ff; }
+    form { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    label { display: grid; gap: .4rem; color: #dcd4ed; }
+    input, select, button { font: inherit; padding: .75rem; border-radius: .5rem; border: 1px solid #63567d; }
+    input, select { background: #241a36; color: white; }
+    button { background: #8d6cff; color: #120a21; font-weight: 700; cursor: pointer; align-self: end; }
+    pre { overflow: auto; background: #241a36; padding: 1rem; border-left: 4px solid #8d6cff; border-radius: .5rem; }
+    .wide { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+<main>
+  <p class="accent">Kubernetes AI capacity planning</p>
+  <h1>Size GPU inference from workload demand</h1>
+  <p>Estimate memory fit, KV cache concurrency, token throughput, replicas, and total GPUs. Replace the example throughput with a benchmark from your exact model and serving stack.</p>
+  <form id="sizing-form">
+    <label>Model parameters (billions)<input name="model_parameters_billions" type="number" value="70" min="0.1" step="0.1"></label>
+    <label>Weight precision<select name="weight_precision_bits"><option>4</option><option>8</option><option selected>16</option><option>32</option></select></label>
+    <label>GPU memory (GiB)<input name="gpu_memory_gib" type="number" value="80" min="1"></label>
+    <label>Tensor parallel GPUs<input name="tensor_parallel_size" type="number" value="2" min="1"></label>
+    <label>Average input tokens<input name="average_input_tokens" type="number" value="1000" min="1"></label>
+    <label>Average output tokens<input name="average_output_tokens" type="number" value="250" min="1"></label>
+    <label>Peak requests/second<input name="peak_requests_per_second" type="number" value="2" min="0.01" step="0.01"></label>
+    <label>Peak concurrency<input name="peak_concurrent_requests" type="number" value="16" min="1"></label>
+    <label>Measured output tok/s per replica<input name="measured_output_tokens_per_second_per_replica" type="number" value="500" min="1"></label>
+    <button type="submit">Calculate capacity</button>
+  </form>
+  <pre id="result">Submit the workload assumptions to see the result.</pre>
+</main>
+<script>
+const numeric = new Set([
+  "model_parameters_billions", "weight_precision_bits", "gpu_memory_gib",
+  "tensor_parallel_size", "average_input_tokens", "average_output_tokens",
+  "peak_requests_per_second", "peak_concurrent_requests",
+  "measured_output_tokens_per_second_per_replica"
+]);
+document.getElementById("sizing-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const body = {};
+  for (const [key, value] of new FormData(event.target)) body[key] = numeric.has(key) ? Number(value) : value;
+  const response = await fetch("/api/v1/estimate", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  document.getElementById("result").textContent = JSON.stringify(await response.json(), null, 2);
+});
+</script>
+</body>
+</html>

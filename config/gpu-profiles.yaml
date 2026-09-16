@@ -1,0 +1,21 @@
+profiles:
+  - name: NVIDIA H100 80GB
+    key: h100-80gb
+    memory_gib: 80
+    notes: Benchmark the exact SXM or PCIe topology before production sizing.
+  - name: NVIDIA A100 80GB
+    key: a100-80gb
+    memory_gib: 80
+    notes: MIG availability and profile sizes depend on platform configuration.
+  - name: NVIDIA L40S 48GB
+    key: l40s-48gb
+    memory_gib: 48
+    notes: Confirm serving-stack support and measured throughput.
+  - name: NVIDIA A10 24GB
+    key: a10-24gb
+    memory_gib: 24
+    notes: Quantization may be required for larger models.
+  - name: AMD Instinct MI300X 192GB
+    key: mi300x-192gb
+    memory_gib: 192
+    notes: Validate ROCm, runtime, and Kubernetes device integration compatibility.

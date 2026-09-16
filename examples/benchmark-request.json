@@ -1,0 +1,10 @@
+{
+  "endpoint": "http://localhost:8000",
+  "model": "example-model",
+  "prompt": "Explain Dynamic Resource Allocation in Kubernetes in two sentences.",
+  "max_tokens": 128,
+  "requests": 20,
+  "concurrency": 4,
+  "timeout_seconds": 120,
+  "verify_tls": true
+}

@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gpu-usage-calculator
+  namespace: gpu-sizing
+spec:
+  to:
+    kind: Service
+    name: gpu-usage-calculator
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

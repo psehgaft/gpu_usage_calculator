@@ -1,0 +1,18 @@
+{
+  "model_name": "example-70b",
+  "model_parameters_billions": 70,
+  "weight_precision_bits": 8,
+  "gpu_model": "H100-80GB",
+  "gpu_memory_gib": 80,
+  "tensor_parallel_size": 2,
+  "layers": 80,
+  "kv_heads": 8,
+  "head_dimension": 128,
+  "kv_cache_precision_bytes": 2,
+  "average_input_tokens": 1000,
+  "average_output_tokens": 250,
+  "peak_requests_per_second": 4,
+  "peak_concurrent_requests": 32,
+  "measured_output_tokens_per_second_per_replica": 850,
+  "capacity_headroom_fraction": 0.25
+}

@@ -1,0 +1,35 @@
+# Kubernetes v1.35+ example. Replace the deviceClassName with one installed by your DRA driver.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: inference-gpu
+  namespace: gpu-sizing
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: example-gpu
+            count: 1
+            selectors:
+              - cel:
+                  expression: device.attributes["example.com"].memoryGiB >= 40
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dra-example
+  namespace: gpu-sizing
+spec:
+  restartPolicy: Never
+  resourceClaims:
+    - name: gpu
+      resourceClaimTemplateName: inference-gpu
+  containers:
+    - name: workload
+      image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+      command: ["sh", "-c", "echo DRA device allocated; sleep 3600"]
+      resources:
+        claims:
+          - name: gpu

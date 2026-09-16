@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: team-gpu-quota
+  namespace: example-team
+spec:
+  hard:
+    requests.nvidia.com/gpu: "4"
+    requests.cpu: "32"
+    requests.memory: 256Gi
+    limits.memory: 320Gi
